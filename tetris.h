@@ -1,7 +1,10 @@
-#define A_WIDTH  10 // Arena width
-#define A_HEIGHT 20 // Arena height
-#define T_WIDTH  4 // Tetromino width
-#define T_HEIGHT 4 // Tetromino height
+#define A_WIDTH  10  // Arena width
+#define A_HEIGHT 20  // Arena height
+#define T_WIDTH  4   // Tetromino width
+#define T_HEIGHT 4   // Tetromino height
+
+// Get milliseconds between two clock_t values
+clock_t getMs(clock_t start, clock_t end);
 
 // Generate a new tetromino
 void newTetromino();
@@ -23,9 +26,6 @@ void addToArena();
 
 // Check if lines can be cleared
 void checkLines();
-
-// Move console cursor
-void gotoXy(int x, int y);
 
 // Draw arena
 void drawArena();

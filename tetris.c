@@ -37,8 +37,7 @@ int main() {
 
     while (!gameOver) {
         clock_t now = clock();
-        clock_t elapsed = (now - lastTime) * 1000 / CLOCKS_PER_SEC;
-
+        clock_t elapsed = getMs(now, lastTime);
         processInputs();
 
         if (elapsed >= targetFrameTime) {
@@ -51,20 +50,19 @@ int main() {
         }
 
         drawArena();
-
         clock_t frameEnd = clock();
-        clock_t currFrameTime = (frameEnd - now) * 1000 / CLOCKS_PER_SEC;
-
-        int delay = targetFrameTime - currFrameTime;
-        if (delay > 0) {
-            Sleep(delay);
-        }
+        clock_t currFrameTime = getMs(frameEnd, now);
+        Sleep(150);
     }
 
     system("cls");
     printf("Game over!\n");
     printf("Score: %d\n", score);
     return 0;
+}
+
+clock_t getMs(clock_t start, clock_t end) {
+    return (start - end) * 1000 / CLOCKS_PER_SEC;
 }
 
 void newTetromino() {
@@ -206,12 +204,6 @@ void checkLines() {
     }
 }
 
-void gotoXy(int x, int y) {
-    COORD pos = {x, y};
-    HANDLE output = GetStdHandle(STD_OUTPUT_HANDLE);
-    SetConsoleCursorPosition(output, pos);
-}
-
 void drawArena() {
     system("cls");
 
@@ -236,11 +228,8 @@ void drawArena() {
 
         buffer[bufferIndex++] = '|';
         buffer[bufferIndex] = '\0';
-
-        gotoXy(0, y);
         printf("%s\n", buffer);
     }
 
-    gotoXy(0, A_HEIGHT + 1);
-    printf("Score: %d\n", score);
+    printf("\nScore: %d\n", score);
 }
