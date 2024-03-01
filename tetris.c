@@ -52,7 +52,7 @@ int main() {
         drawArena();
         clock_t frameEnd = clock();
         clock_t currFrameTime = getMs(frameEnd, now);
-        Sleep(150);
+        Sleep(100);
     }
 
     system("cls");
@@ -77,18 +77,18 @@ bool isValidPosition(int tetromino, int rotation, int posX, int posY) {
     for (int x = 0; x < T_WIDTH; x++) {
         for (int y = 0; y < T_HEIGHT; y++) {
             int index = rotate(x, y, rotation);
-            if (tetrominoes[tetromino][index] != 1) {
+            if (1 != tetrominoes[tetromino][index]) {
                 continue;
             }
 
             int arenaX = x + posX;
             int arenaY = y + posY;
-            if (arenaX < 0 || arenaX >= A_WIDTH || arenaY >= A_HEIGHT) {
+            if (0 > arenaX || A_WIDTH <= arenaX || A_HEIGHT <= arenaY) {
                 return false;
             }
 
             int arenaXY = arena[arenaY][arenaX];
-            if (arenaY >= 0 && arenaXY == 1) {
+            if (0 <= arenaY && 1 == arenaXY) {
                 return false;
             }
         }
@@ -126,20 +126,17 @@ void processInputs() {
             }
             break;
         case 75:  // Left arrow key
-            if (isValidPosition(currTetrominoIdx, currRotation, currX - 1,
-                                currY)) {
+            if (isValidPosition(currTetrominoIdx, currRotation, currX - 1, currY)) {
                 currX--;
             }
             break;
         case 77:  // Right arrow key
-            if (isValidPosition(currTetrominoIdx, currRotation, currX + 1,
-                                currY)) {
+            if (isValidPosition(currTetrominoIdx, currRotation, currX + 1, currY)) {
                 currX++;
             }
             break;
         case 80:  // Down arrow key
-            if (isValidPosition(currTetrominoIdx, currRotation, currX,
-                                currY + 1)) {
+            if (isValidPosition(currTetrominoIdx, currRotation, currX, currY + 1)) {
                 currY++;
             }
             break;
@@ -159,14 +156,13 @@ void addToArena() {
     for (int y = 0; y < T_HEIGHT; y++) {
         for (int x = 0; x < T_WIDTH; x++) {
             int index = rotate(x, y, currRotation);
-            if (tetrominoes[currTetrominoIdx][index] != 1) {
+            if (1 != tetrominoes[currTetrominoIdx][index]) {
                 continue;
             }
 
             int arenaX = currX + x;
             int arenaY = currY + y;
-            if (arenaX >= 0 && arenaX < A_WIDTH && arenaY >= 0 &&
-                arenaY < A_HEIGHT) {
+            if (0 <= arenaX && A_WIDTH > arenaX && 0 <= arenaY && A_HEIGHT > arenaY) {
                 arena[arenaY][arenaX] = 1;
             }
         }
@@ -179,7 +175,7 @@ void checkLines() {
     for (int y = A_HEIGHT - 1; y >= 0; y--) {
         bool lineFull = true;
         for (int x = 0; x < A_WIDTH; x++) {
-            if (arena[y][x] == 0) {
+            if (0 == arena[y][x]) {
                 lineFull = false;
                 break;
             }
@@ -199,7 +195,7 @@ void checkLines() {
         }
     }
 
-    if (clearedLines > 0) {
+    if (0 < clearedLines) {
         score += 100 * clearedLines;
     }
 }
@@ -215,11 +211,10 @@ void drawArena() {
 
         for (int x = 0; x < A_WIDTH; x++) {
             int rotatedPos = rotate(x - currX, y - currY, currRotation);
-            if (arena[y][x] == 1) {
+            if (1 == arena[y][x]) {
                 buffer[bufferIndex++] = '#';
-            } else if (x >= currX && x < currX + T_WIDTH && y >= currY &&
-                       y < currY + T_HEIGHT &&
-                       tetrominoes[currTetrominoIdx][rotatedPos] == 1) {
+            } else if (x >= currX && x < currX + T_WIDTH && y >= currY && y < currY + T_HEIGHT &&
+                       1 == tetrominoes[currTetrominoIdx][rotatedPos]) {
                 buffer[bufferIndex++] = '#';
             } else {
                 buffer[bufferIndex++] = ' ';
