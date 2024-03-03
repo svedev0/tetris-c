@@ -10,7 +10,7 @@ clock_t getMs(clock_t start, clock_t end);
 void newTetromino();
 
 // Determine if a position is valid
-bool isValidPosition(int tetromino, int rotation, int posX, int posY);
+bool validPos(int tetromino, int rotation, int posX, int posY);
 
 // Rotate tetromino
 int rotate(int x, int y, int rotation);

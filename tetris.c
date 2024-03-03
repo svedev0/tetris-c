@@ -1,5 +1,6 @@
 #include <conio.h>
 #include <stdbool.h>
+#include <stdint.h>
 #include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
@@ -20,7 +21,7 @@ const int tetrominoes[7][16] = {
 
 int arena[A_HEIGHT][A_WIDTH];
 
-int score = 0;
+uint32_t score = 0;
 bool gameOver = false;
 int currTetrominoIdx;
 int currRotation = 0;
@@ -56,8 +57,7 @@ int main() {
     }
 
     system("cls");
-    printf("Game over!\n");
-    printf("Score: %d\n", score);
+    printf("Game over!\nScore: %d\n", score);
     return 0;
 }
 
@@ -70,10 +70,10 @@ void newTetromino() {
     currRotation = 0;
     currX = (A_WIDTH / 2) - (T_WIDTH / 2);
     currY = 0;
-    gameOver = !isValidPosition(currTetrominoIdx, currRotation, currX, currY);
+    gameOver = !validPos(currTetrominoIdx, currRotation, currX, currY);
 }
 
-bool isValidPosition(int tetromino, int rotation, int posX, int posY) {
+bool validPos(int tetromino, int rotation, int posX, int posY) {
     for (int x = 0; x < T_WIDTH; x++) {
         for (int y = 0; y < T_HEIGHT; y++) {
             int index = rotate(x, y, rotation);
@@ -121,22 +121,22 @@ void processInputs() {
         switch (key) {
         case 32:  // Spacebar
             int nextRotation = (currRotation + 1) % 4;
-            if (isValidPosition(currTetrominoIdx, nextRotation, currX, currY)) {
+            if (validPos(currTetrominoIdx, nextRotation, currX, currY)) {
                 currRotation = nextRotation;
             }
             break;
         case 75:  // Left arrow key
-            if (isValidPosition(currTetrominoIdx, currRotation, currX - 1, currY)) {
+            if (validPos(currTetrominoIdx, currRotation, currX - 1, currY)) {
                 currX--;
             }
             break;
         case 77:  // Right arrow key
-            if (isValidPosition(currTetrominoIdx, currRotation, currX + 1, currY)) {
+            if (validPos(currTetrominoIdx, currRotation, currX + 1, currY)) {
                 currX++;
             }
             break;
         case 80:  // Down arrow key
-            if (isValidPosition(currTetrominoIdx, currRotation, currX, currY + 1)) {
+            if (validPos(currTetrominoIdx, currRotation, currX, currY + 1)) {
                 currY++;
             }
             break;
@@ -145,7 +145,7 @@ void processInputs() {
 }
 
 bool moveDown() {
-    if (isValidPosition(currTetrominoIdx, currRotation, currX, currY + 1)) {
+    if (validPos(currTetrominoIdx, currRotation, currX, currY + 1)) {
         currY++;
         return true;
     }
@@ -202,7 +202,6 @@ void checkLines() {
 
 void drawArena() {
     system("cls");
-
     char buffer[1024];
 
     for (int y = 0; y < A_HEIGHT; y++) {
