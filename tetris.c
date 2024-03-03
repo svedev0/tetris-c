@@ -162,7 +162,9 @@ void addToArena() {
 
             int arenaX = currX + x;
             int arenaY = currY + y;
-            if (0 <= arenaX && A_WIDTH > arenaX && 0 <= arenaY && A_HEIGHT > arenaY) {
+            bool xInRange = (0 <= arenaX) && (arenaX < A_WIDTH);
+            bool yInRange = (0 <= arenaY) && (arenaY < A_HEIGHT);
+            if (xInRange && yInRange) {
                 arena[arenaY][arenaX] = 1;
             }
         }
@@ -181,18 +183,21 @@ void checkLines() {
             }
         }
 
-        if (lineFull) {
-            clearedLines++;
-            for (int yy = y; yy > 0; yy--) {
-                for (int xx = 0; xx < A_WIDTH; xx++) {
-                    arena[yy][xx] = arena[yy - 1][xx];
-                }
-            }
-            for (int xx = 0; xx < A_WIDTH; xx++) {
-                arena[0][xx] = 0;
-            }
-            y++;
+        if (!lineFull) {
+            continue;
         }
+
+        clearedLines++;
+        for (int yy = y; yy > 0; yy--) {
+            for (int xx = 0; xx < A_WIDTH; xx++) {
+                arena[yy][xx] = arena[yy - 1][xx];
+            }
+        }
+
+        for (int xx = 0; xx < A_WIDTH; xx++) {
+            arena[0][xx] = 0;
+        }
+        y++;
     }
 
     if (0 < clearedLines) {
@@ -210,10 +215,13 @@ void drawArena() {
 
         for (int x = 0; x < A_WIDTH; x++) {
             int rotatedPos = rotate(x - currX, y - currY, currRotation);
+            bool validX = x >= currX && x < currX + T_WIDTH;
+            bool validY = y >= currY && y < currY + T_HEIGHT;
+            bool xyFilled = 1 == tetrominoes[currTetrominoIdx][rotatedPos];
+
             if (1 == arena[y][x]) {
                 buffer[bufferIndex++] = '#';
-            } else if (x >= currX && x < currX + T_WIDTH && y >= currY && y < currY + T_HEIGHT &&
-                       1 == tetrominoes[currTetrominoIdx][rotatedPos]) {
+            } else if (validX && validY && xyFilled) {
                 buffer[bufferIndex++] = '#';
             } else {
                 buffer[bufferIndex++] = ' ';
