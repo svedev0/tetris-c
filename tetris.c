@@ -29,7 +29,7 @@ int currX = A_WIDTH / 2;
 int currY = 0;
 
 int main() {
-    system("cls");
+    printf("\033[2J\033[1;1H");  // clear screen
     memset(arena, 0, sizeof(arena[0][0]) * A_HEIGHT * A_WIDTH);
     newTetromino();
 
@@ -56,7 +56,7 @@ int main() {
         Sleep(100);
     }
 
-    system("cls");
+    printf("\033[2J\033[1;1H");  // clear screen
     printf("Game over!\nScore: %d\n", score);
     return 0;
 }
@@ -99,13 +99,13 @@ bool validPos(int tetromino, int rotation, int posX, int posY) {
 int rotate(int x, int y, int rotation) {
     switch (rotation % 4) {
     case 0:
-        return x + y * 4;
+        return x + y * T_WIDTH;
     case 1:
-        return 12 + y - (x * 4);
+        return 12 + y - (x * T_WIDTH);
     case 2:
-        return 15 - (y * 4) - x;
+        return 15 - (y * T_WIDTH) - x;
     case 3:
-        return 3 - y + (x * 4);
+        return 3 - y + (x * T_WIDTH);
     default:
         return 0;
     }
@@ -206,11 +206,12 @@ void checkLines() {
 }
 
 void drawArena() {
-    system("cls");
-    char buffer[1024];
+    printf("%c[%d;%df", 0x1B, 0, 0);  // reset cursor position
+
+    char buffer[512];
+    int bufferIndex = 0;
 
     for (int y = 0; y < A_HEIGHT; y++) {
-        int bufferIndex = 0;
         buffer[bufferIndex++] = '|';
 
         for (int x = 0; x < A_WIDTH; x++) {
@@ -229,9 +230,9 @@ void drawArena() {
         }
 
         buffer[bufferIndex++] = '|';
-        buffer[bufferIndex] = '\0';
-        printf("%s\n", buffer);
+        buffer[bufferIndex++] = '\n';
     }
 
-    printf("\nScore: %d\n", score);
+    buffer[bufferIndex] = '\0';
+    printf("%s\n\nScore: %d\n", buffer, score);
 }
