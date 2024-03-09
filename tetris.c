@@ -29,16 +29,16 @@ int currX = A_WIDTH / 2;
 int currY = 0;
 
 int main() {
-    printf("\033[2J\033[1;1H");  // clear screen
+    printf("\e[2J\e[H");  // clear screen & reset cursor position
     memset(arena, 0, sizeof(arena[0][0]) * A_HEIGHT * A_WIDTH);
     newTetromino();
 
-    const int targetFrameTime = 300;
+    const int targetFrameTime = 350;
     clock_t lastTime = clock();
 
     while (!gameOver) {
         clock_t now = clock();
-        clock_t elapsed = getMs(now, lastTime);
+        clock_t elapsed = (now - lastTime) * 1000 / CLOCKS_PER_SEC;
         processInputs();
 
         if (elapsed >= targetFrameTime) {
@@ -51,18 +51,12 @@ int main() {
         }
 
         drawArena();
-        clock_t frameEnd = clock();
-        clock_t currFrameTime = getMs(frameEnd, now);
-        Sleep(100);
+        Sleep(10);
     }
 
-    printf("\033[2J\033[1;1H");  // clear screen
+    printf("\e[2J\e[H");  // clear screen & reset cursor position
     printf("Game over!\nScore: %d\n", score);
     return 0;
-}
-
-clock_t getMs(clock_t start, clock_t end) {
-    return (start - end) * 1000 / CLOCKS_PER_SEC;
 }
 
 void newTetromino() {
@@ -206,7 +200,7 @@ void checkLines() {
 }
 
 void drawArena() {
-    printf("\x1b[0;0f");  // reset cursor position
+    printf("\e[?25l\e[H");  // hide cursor & reset cursor position
 
     char buffer[512];
     int bufferIndex = 0;
@@ -220,9 +214,7 @@ void drawArena() {
             bool validY = y >= currY && y < currY + T_HEIGHT;
             bool xyFilled = 1 == tetrominoes[currTetrominoIdx][rotatedPos];
 
-            if (1 == arena[y][x]) {
-                buffer[bufferIndex++] = '#';
-            } else if (validX && validY && xyFilled) {
+            if (1 == arena[y][x] || (validX && validY && xyFilled)) {
                 buffer[bufferIndex++] = '#';
             } else {
                 buffer[bufferIndex++] = ' ';
@@ -234,5 +226,5 @@ void drawArena() {
     }
 
     buffer[bufferIndex] = '\0';
-    printf("%s\n\nScore: %d\n", buffer, score);
+    printf("%s\n\nScore: %d\n\n", buffer, score);
 }

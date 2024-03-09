@@ -3,9 +3,6 @@
 #define T_WIDTH  4   // Tetromino width
 #define T_HEIGHT 4   // Tetromino height
 
-// Get milliseconds between two clock_t values
-clock_t getMs(clock_t start, clock_t end);
-
 // Generate a new tetromino
 void newTetromino();
 
