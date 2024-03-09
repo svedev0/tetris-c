@@ -206,7 +206,7 @@ void checkLines() {
 }
 
 void drawArena() {
-    printf("%c[%d;%df", 0x1B, 0, 0);  // reset cursor position
+    printf("\x1b[0;0f");  // reset cursor position
 
     char buffer[512];
     int bufferIndex = 0;
