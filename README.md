@@ -32,6 +32,10 @@ clang tetris-ext.c -o tetris-ext.exe
 
 ### Demos
 
-**TODO:** _Add demo GIF of basic version_
+Basic version
 
-**TODO:** _Add demo GIF of ext version_
+<img src="https://raw.githubusercontent.com/svedev0/tetris-c/master/img/tetris.gif" width="288" height="432" />
+
+Extended version
+
+<img src="https://raw.githubusercontent.com/svedev0/tetris-c/master/img/tetris-ext.gif" width="288" height="432" />
